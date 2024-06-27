@@ -11,6 +11,7 @@ public class NotificationSettingDTO {
         this.enabled = enabled;
     }
 
+    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -34,6 +35,4 @@ public class NotificationSettingDTO {
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
-
-    // Getters and Setters
 }

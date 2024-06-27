@@ -1,13 +1,12 @@
 package com.project.issue.service;
 
 import com.project.issue.model.Notification;
+import com.project.issue.dto.NotificationSettingDTO;
 import com.project.issue.repository.NotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class NotificationService {
@@ -19,11 +18,11 @@ public class NotificationService {
         return notificationRepository.findAll();
     }
 
-    public List<Map<String, Object>> getNotificationSettings() {
+    public List<NotificationSettingDTO> getNotificationSettings() {
         // Simplified example, in a real scenario, you would fetch actual settings from the database or configuration
         return List.of(
-                Map.of("id", (Object) 1, "name", "Email Notifications", "enabled", true),
-                Map.of("id", (Object) 2, "name", "SMS Notifications", "enabled", false)
+                new NotificationSettingDTO(1L, "Email Notifications", true),
+                new NotificationSettingDTO(2L, "SMS Notifications", false)
         );
     }
 

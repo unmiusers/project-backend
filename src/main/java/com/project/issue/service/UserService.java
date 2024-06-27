@@ -55,8 +55,8 @@ public class UserService {
         return loginHistoryRepository.findByUserId(userId)
                 .stream()
                 .map(history -> Map.of(
-                        "date", history.getDate(),
-                        "ip", history.getIp()
+                        "date", (Object) history.getDate(),
+                        "ip", (Object) history.getIp()
                 ))
                 .collect(Collectors.toList());
     }

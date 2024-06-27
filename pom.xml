@@ -50,6 +50,25 @@
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
 
+        <!-- JWT dependency for security -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>0.11.2</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>0.11.2</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>0.11.2</version>
+            <scope>runtime</scope>
+        </dependency>
+
         <!-- Lombok dependency for reducing boilerplate code -->
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -90,5 +109,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
