@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/timelog")
@@ -26,7 +27,7 @@ public class TimeLogController {
     }
 
     @GetMapping("/reports")
-    public ResponseEntity<List<TimeLog>> getTimeLogReports() {
+    public ResponseEntity<List<Map<String, Object>>> getTimeLogReports() {
         return ResponseEntity.ok(timeLogService.getTimeLogReports());
     }
 

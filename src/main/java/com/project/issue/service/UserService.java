@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -53,7 +54,10 @@ public class UserService {
     public List<Map<String, Object>> getUserLoginHistory(Long userId) {
         return loginHistoryRepository.findByUserId(userId)
                 .stream()
-                .map(history -> Map.of("date", history.getDate(), "ip", history.getIp()))
+                .map(history -> Map.of(
+                        "date", history.getDate(),
+                        "ip", history.getIp()
+                ))
                 .collect(Collectors.toList());
     }
 }

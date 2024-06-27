@@ -18,14 +18,20 @@ public class ReportService {
     public List<Map<String, Object>> getIssueReports() {
         return reportRepository.findAll()
                 .stream()
-                .map(report -> Map.of("issue", report.getIssue(), "status", report.getStatus()))
+                .map(report -> Map.of(
+                        "issue", (Object) report.getIssue(),
+                        "status", (Object) report.getStatus()
+                ))
                 .collect(Collectors.toList());
     }
 
     public List<Map<String, Object>> getProgressReports() {
         return reportRepository.findAll()
                 .stream()
-                .map(report -> Map.of("task", report.getTask(), "completion", report.getCompletion()))
+                .map(report -> Map.of(
+                        "task", (Object) report.getTask(),
+                        "completion", (Object) report.getCompletion()
+                ))
                 .collect(Collectors.toList());
     }
 

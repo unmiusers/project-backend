@@ -1,6 +1,7 @@
 package com.project.issue.controller;
 
 import com.project.issue.model.Notification;
+import com.project.issue.dto.NotificationSettingDTO;
 import com.project.issue.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class NotificationController {
     }
 
     @GetMapping("/settings")
-    public ResponseEntity<List<Map<String, Object>>> getNotificationSettings() {
+    public ResponseEntity<List<NotificationSettingDTO>> getNotificationSettings() {
         return ResponseEntity.ok(notificationService.getNotificationSettings());
     }
 

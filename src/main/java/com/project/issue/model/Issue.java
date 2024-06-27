@@ -28,6 +28,8 @@ public class Issue {
     @JoinColumn(name = "issue_id")
     private List<Comment> comments = new ArrayList<>();
 
+    // Getters and Setters
+
     public Long getId() {
         return id;
     }
@@ -84,5 +86,11 @@ public class Issue {
         this.assignee = assignee;
     }
 
-    // Getters and Setters
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
 }

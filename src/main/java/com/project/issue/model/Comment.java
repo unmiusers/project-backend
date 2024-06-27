@@ -14,6 +14,8 @@ public class Comment {
 
     private String author;
 
+    // Getters and Setters
+
     public Long getId() {
         return id;
     }
@@ -37,7 +39,4 @@ public class Comment {
     public void setAuthor(String author) {
         this.author = author;
     }
-
-    // Getters and Setters
 }
-

@@ -22,8 +22,8 @@ public class NotificationService {
     public List<Map<String, Object>> getNotificationSettings() {
         // Simplified example, in a real scenario, you would fetch actual settings from the database or configuration
         return List.of(
-                Map.of("id", 1, "name", "Email Notifications", "enabled", true),
-                Map.of("id", 2, "name", "SMS Notifications", "enabled", false)
+                Map.of("id", (Object) 1, "name", "Email Notifications", "enabled", true),
+                Map.of("id", (Object) 2, "name", "SMS Notifications", "enabled", false)
         );
     }
 

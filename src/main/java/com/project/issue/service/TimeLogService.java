@@ -26,14 +26,20 @@ public class TimeLogService {
     public List<Map<String, Object>> getTimeLogReports() {
         return timeLogRepository.findAll()
                 .stream()
-                .map(log -> Map.of("description", log.getDescription(), "hours", log.getHours()))
+                .map(log -> Map.of(
+                        "description", (Object) log.getDescription(),
+                        "hours", (Object) log.getHours()
+                ))
                 .collect(Collectors.toList());
     }
 
     public List<Map<String, Object>> getTimeLogVisualization() {
         return timeLogRepository.findAll()
                 .stream()
-                .map(log -> Map.of("task", log.getDescription(), "hours", log.getHours()))
+                .map(log -> Map.of(
+                        "task", (Object) log.getDescription(),
+                        "hours", (Object) log.getHours()
+                ))
                 .collect(Collectors.toList());
     }
 }
