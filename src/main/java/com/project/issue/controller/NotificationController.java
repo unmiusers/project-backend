@@ -16,11 +16,6 @@ public class NotificationController {
     @Autowired
     private NotificationService notificationService;
 
-    @GetMapping("/unprotected")
-    public ResponseEntity<String> unprotectedEndpoint() {
-        return ResponseEntity.ok("This is an unprotected endpoint");
-    }
-
     @GetMapping
     public ResponseEntity<List<Notification>> getAllNotifications() {
         return ResponseEntity.ok(notificationService.getAllNotifications());

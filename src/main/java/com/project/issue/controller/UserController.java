@@ -1,5 +1,6 @@
 package com.project.issue.controller;
 
+import com.project.issue.model.LoginRequest;
 import com.project.issue.model.User;
 import com.project.issue.service.UserService;
 import com.project.issue.util.JwtUtil;
@@ -7,6 +8,9 @@ import com.project.issue.util.ResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,18 +26,13 @@ public class UserController {
     private UserService userService;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
     private JwtUtil jwtUtil;
 
     @Autowired
-    private ResponseUtil responseUtil;
+    private PasswordEncoder passwordEncoder;
 
-    @GetMapping("/unprotected")
-    public ResponseEntity<String> unprotectedEndpoint() {
-        return ResponseEntity.ok("This is an unprotected endpoint");
-    }
+    @Autowired
+    private ResponseUtil responseUtil;
 
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
@@ -84,13 +83,24 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Object> loginUser(@RequestBody User user) {
-        Optional<User> optionalUser = userService.findByUsername(user.getUsername());
-        if (optionalUser.isPresent() && passwordEncoder.matches(user.getPassword(), optionalUser.get().getPassword())) {
-            String token = jwtUtil.generateToken(user.getUsername());
-            return responseUtil.generateResponse("Login successful", HttpStatus.OK, token);
+    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        loginRequest.getUsername(),
+                        loginRequest.getPassword()
+                )
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        User user = userService.findByUsername(loginRequest.getUsername());
+        if (user == null || !userService.checkPassword(user, loginRequest.getPassword())) {
+            return ResponseEntity.status(401).body("Invalid username or password");
         }
-        return responseUtil.generateResponse("Invalid username or password", HttpStatus.UNAUTHORIZED, null);
+
+        String token = jwtUtil.generateToken(user.getUsername());
+
+        return ResponseEntity.ok(token);
     }
 
     @GetMapping("/me")

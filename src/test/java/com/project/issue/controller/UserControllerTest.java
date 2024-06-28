@@ -168,4 +168,15 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$[1].date", is("2024-06-02T14:22:33")))
                 .andExpect(jsonPath("$[1].ip", is("192.168.0.2")));
     }
+
+    @Test
+    public void loginAdmin() throws Exception {
+        String token = "validTokenForAdmin";
+
+        mockMvc.perform(post("/api/users/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\":\"admin\", \"password\":\"admin\"}")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk());
+    }
 }
