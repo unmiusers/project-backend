@@ -37,7 +37,6 @@ public class UserService {
                     existingUser.setName(user.getName());
                     existingUser.setPassword(user.getPassword());
                     existingUser.setEmail(user.getEmail());
-                    existingUser.setRole(user.getRole());
                     return userRepository.save(existingUser);
                 });
     }
@@ -58,5 +57,13 @@ public class UserService {
             map.put("ip", history.getIp());
             return map;
         }).collect(Collectors.toList());
+    }
+
+    public User saveUser(User user) {
+        return userRepository.save(user);
+    }
+
+    public Optional<User> findByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 }

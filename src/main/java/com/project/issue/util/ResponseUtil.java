@@ -11,7 +11,7 @@ public class ResponseUtil {
         return new ResponseEntity<>(new ApiResponse(message, status, responseObj), status);
     }
 
-    private static class ApiResponse {
+    public static class ApiResponse {
         private String message;
         private HttpStatus status;
         private Object data;
@@ -23,7 +23,6 @@ public class ResponseUtil {
         }
 
         // Getters and setters
-
         public String getMessage() {
             return message;
         }
