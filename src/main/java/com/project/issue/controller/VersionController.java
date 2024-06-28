@@ -15,6 +15,11 @@ public class VersionController {
     @Autowired
     private VersionService versionService;
 
+    @GetMapping("/unprotected")
+    public ResponseEntity<String> unprotectedEndpoint() {
+        return ResponseEntity.ok("This is an unprotected endpoint");
+    }
+
     @GetMapping("/commits")
     public ResponseEntity<List<Commit>> getAllCommits() {
         return ResponseEntity.ok(versionService.getAllCommits());

@@ -41,6 +41,13 @@ public class UserControllerTest {
     }
 
     @Test
+    public void accessUnprotectedUrl() throws Exception {
+        mockMvc.perform(get("/api/users/unprotected"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("This is an unprotected endpoint"));
+    }
+
+    @Test
     public void testGetAllUsers() throws Exception {
         User user1 = new User();
         user1.setId(1L);

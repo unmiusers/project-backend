@@ -15,6 +15,11 @@ public class GanttController {
     @Autowired
     private GanttService ganttService;
 
+    @GetMapping("/unprotected")
+    public ResponseEntity<String> unprotectedEndpoint() {
+        return ResponseEntity.ok("This is an unprotected endpoint");
+    }
+
     @GetMapping("/tasks")
     public ResponseEntity<List<GanttTask>> getAllGanttTasks() {
         return ResponseEntity.ok(ganttService.getAllGanttTasks());

@@ -16,8 +16,9 @@ import org.springframework.web.context.WebApplicationContext;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.unauthenticated;
+import static org.springframework.security.test.web.servlet.result.SecurityMockMvcResultMatchers.authenticated;
+import static org.springframework.security.test.web.servlet.result.SecurityMockMvcResultMatchers.unauthenticated;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -43,49 +44,59 @@ public class SecurityConfigTest {
                 .apply(springSecurity())
                 .addFilters(new JwtAuthenticationFilter(jwtUtil))
                 .build();
-    }
 
-    private String generateToken(String username) {
-        return jwtUtil.generateToken(username);
+        // Mocking jwtUtil methods
+        when(jwtUtil.extractUsername(anyString())).thenAnswer(invocation -> {
+            String token = invocation.getArgument(0, String.class);
+            if (token.equals("validTokenForUser")) return "user";
+            if (token.equals("validTokenForAdmin")) return "admin";
+            return null;
+        });
+        when(jwtUtil.validateToken(anyString(), anyString())).thenAnswer(invocation -> {
+            String token = invocation.getArgument(0, String.class);
+            String username = invocation.getArgument(1, String.class);
+            return (token.equals("validTokenForUser") && username.equals("user")) ||
+                    (token.equals("validTokenForAdmin") && username.equals("admin"));
+        });
     }
 
     @Test
     public void loginUser() throws Exception {
-        when(jwtUtil.extractUsername(anyString())).thenReturn("user");
-        when(jwtUtil.validateToken(anyString(), anyString())).thenReturn(true);
+        String token = "validTokenForUser";
 
         mockMvc.perform(post("/api/users/login")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"username\":\"user\", \"password\":\"password\"}"))
+                        .content("{\"username\":\"user\", \"password\":\"password\"}")
+                        .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void loginAdmin() throws Exception {
-        when(jwtUtil.extractUsername(anyString())).thenReturn("admin");
-        when(jwtUtil.validateToken(anyString(), anyString())).thenReturn(true);
+        String token = "validTokenForAdmin";
 
         mockMvc.perform(post("/api/users/login")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"username\":\"admin\", \"password\":\"admin\"}"))
+                        .content("{\"username\":\"admin\", \"password\":\"admin\"}")
+                        .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void loginInvalidUser() throws Exception {
-        when(jwtUtil.extractUsername(anyString())).thenReturn("invalid");
-        when(jwtUtil.validateToken(anyString(), anyString())).thenReturn(false);
+        String token = "invalidToken";
 
         mockMvc.perform(post("/api/users/login")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"username\":\"invalid\", \"password\":\"invalid\"}"))
+                        .content("{\"username\":\"invalid\", \"password\":\"invalid\"}")
+                        .header("Authorization", "Bearer " + token))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     @WithMockUser(roles = "USER")
     public void accessProtectedUrlWithUser() throws Exception {
-        String token = generateToken("user");
+        String token = "validTokenForUser";
 
         mockMvc.perform(get("/api/protected-url")
                         .header("Authorization", "Bearer " + token))
@@ -96,7 +107,7 @@ public class SecurityConfigTest {
     @Test
     @WithMockUser(roles = "ADMIN")
     public void accessProtectedUrlWithAdmin() throws Exception {
-        String token = generateToken("admin");
+        String token = "validTokenForAdmin";
 
         mockMvc.perform(get("/api/protected-url")
                         .header("Authorization", "Bearer " + token))
@@ -107,7 +118,7 @@ public class SecurityConfigTest {
     @Test
     @WithMockUser(roles = "USER")
     public void logoutUser() throws Exception {
-        String token = generateToken("user");
+        String token = "validTokenForUser";
 
         mockMvc.perform(post("/api/users/logout")
                         .header("Authorization", "Bearer " + token))

@@ -15,6 +15,11 @@ public class IssueController {
     @Autowired
     private IssueService issueService;
 
+    @GetMapping("/unprotected")
+    public ResponseEntity<String> unprotectedEndpoint() {
+        return ResponseEntity.ok("This is an unprotected endpoint");
+    }
+
     @GetMapping
     public ResponseEntity<List<Issue>> getAllIssues() {
         return ResponseEntity.ok(issueService.getAllIssues());

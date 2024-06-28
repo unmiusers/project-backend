@@ -15,6 +15,11 @@ public class ReportController {
     @Autowired
     private ReportService reportService;
 
+    @GetMapping("/unprotected")
+    public ResponseEntity<String> unprotectedEndpoint() {
+        return ResponseEntity.ok("This is an unprotected endpoint");
+    }
+
     @GetMapping("/issues")
     public ResponseEntity<List<Map<String, Object>>> getIssueReports() {
         return ResponseEntity.ok(reportService.getIssueReports());

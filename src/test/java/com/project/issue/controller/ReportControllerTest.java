@@ -21,8 +21,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class ReportControllerTest {
 
@@ -38,6 +37,13 @@ public class ReportControllerTest {
     public void setUp() {
         MockitoAnnotations.openMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(reportController).build();
+    }
+
+    @Test
+    public void accessUnprotectedUrl() throws Exception {
+        mockMvc.perform(get("/api/users/unprotected"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("This is an unprotected endpoint"));
     }
 
     @Test

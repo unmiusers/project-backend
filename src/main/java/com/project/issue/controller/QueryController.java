@@ -15,6 +15,11 @@ public class QueryController {
     @Autowired
     private QueryService queryService;
 
+    @GetMapping("/unprotected")
+    public ResponseEntity<String> unprotectedEndpoint() {
+        return ResponseEntity.ok("This is an unprotected endpoint");
+    }
+
     @GetMapping
     public ResponseEntity<List<Query>> getAllQueries() {
         return ResponseEntity.ok(queryService.getAllQueries());

@@ -16,6 +16,11 @@ public class TimeLogController {
     @Autowired
     private TimeLogService timeLogService;
 
+    @GetMapping("/unprotected")
+    public ResponseEntity<String> unprotectedEndpoint() {
+        return ResponseEntity.ok("This is an unprotected endpoint");
+    }
+
     @GetMapping
     public ResponseEntity<List<TimeLog>> getAllTimeLogs() {
         return ResponseEntity.ok(timeLogService.getAllTimeLogs());

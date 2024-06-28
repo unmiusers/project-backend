@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.security.Key;
 import java.util.Date;
 import java.util.function.Function;
 
@@ -21,14 +20,11 @@ public class JwtUtil {
     @Value("${jwt.expiration}")
     private long expiration;
 
-    private Key key;
-
     @PostConstruct
     public void init() {
         if (secret.length() < 32) {
-            throw new IllegalArgumentException("The JWT secret key must be at least 32 characters long.");
+            throw new IllegalArgumentException("JWT secret key must be at least 32 characters");
         }
-        key = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
     public String extractUsername(String token) {
@@ -45,7 +41,7 @@ public class JwtUtil {
     }
 
     public Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+        return Jwts.parserBuilder().setSigningKey(secret.getBytes()).build().parseClaimsJws(token).getBody();
     }
 
     private Boolean isTokenExpired(String token) {
@@ -59,7 +55,7 @@ public class JwtUtil {
     private String createToken(String subject) {
         return Jwts.builder().setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(key, SignatureAlgorithm.HS256).compact();
+                .signWith(Keys.hmacShaKeyFor(secret.getBytes()), SignatureAlgorithm.HS256).compact();
     }
 
     public Boolean validateToken(String token, String username) {

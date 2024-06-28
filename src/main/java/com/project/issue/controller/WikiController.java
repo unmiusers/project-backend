@@ -15,6 +15,11 @@ public class WikiController {
     @Autowired
     private WikiService wikiService;
 
+    @GetMapping("/unprotected")
+    public ResponseEntity<String> unprotectedEndpoint() {
+        return ResponseEntity.ok("This is an unprotected endpoint");
+    }
+
     @GetMapping("/pages")
     public ResponseEntity<List<WikiPage>> getAllWikiPages() {
         return ResponseEntity.ok(wikiService.getAllWikiPages());

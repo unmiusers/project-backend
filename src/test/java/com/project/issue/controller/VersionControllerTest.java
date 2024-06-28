@@ -39,6 +39,13 @@ public class VersionControllerTest {
     }
 
     @Test
+    public void accessUnprotectedUrl() throws Exception {
+        mockMvc.perform(get("/api/users/unprotected"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("This is an unprotected endpoint"));
+    }
+
+    @Test
     public void testGetAllCommits() throws Exception {
         Commit commit1 = new Commit();
         commit1.setId("commit1");

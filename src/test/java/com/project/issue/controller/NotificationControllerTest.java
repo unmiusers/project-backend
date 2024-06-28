@@ -19,8 +19,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class NotificationControllerTest {
 
@@ -31,6 +30,13 @@ public class NotificationControllerTest {
 
     @InjectMocks
     private NotificationController notificationController;
+
+    @Test
+    public void accessUnprotectedUrl() throws Exception {
+        mockMvc.perform(get("/api/users/unprotected"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("This is an unprotected endpoint"));
+    }
 
     @BeforeEach
     public void setUp() {

@@ -31,6 +31,13 @@ public class GanttControllerTest {
     @InjectMocks
     private GanttController ganttController;
 
+    @Test
+    public void accessUnprotectedUrl() throws Exception {
+        mockMvc.perform(get("/api/users/unprotected"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("This is an unprotected endpoint"));
+    }
+
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
