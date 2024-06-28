@@ -3,10 +3,10 @@ package com.project.issue.service;
 import com.project.issue.model.User;
 import com.project.issue.model.LoginHistory;
 import com.project.issue.repository.UserRepository;
-import com.project.issue.repository.LoginHistoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -17,9 +17,6 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private LoginHistoryRepository loginHistoryRepository;
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -36,7 +33,9 @@ public class UserService {
     public Optional<User> updateUser(Long id, User user) {
         return userRepository.findById(id)
                 .map(existingUser -> {
+                    existingUser.setUsername(user.getUsername());
                     existingUser.setName(user.getName());
+                    existingUser.setPassword(user.getPassword());
                     existingUser.setEmail(user.getEmail());
                     existingUser.setRole(user.getRole());
                     return userRepository.save(existingUser);
@@ -52,12 +51,12 @@ public class UserService {
     }
 
     public List<Map<String, Object>> getUserLoginHistory(Long userId) {
-        return loginHistoryRepository.findByUserId(userId)
-                .stream()
-                .map(history -> Map.of(
-                        "date", (Object) history.getDate(),
-                        "ip", (Object) history.getIp()
-                ))
-                .collect(Collectors.toList());
+        List<LoginHistory> loginHistories = userRepository.findLoginHistoryByUserId(userId);
+        return loginHistories.stream().map(history -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put("date", history.getDate().toString());
+            map.put("ip", history.getIp());
+            return map;
+        }).collect(Collectors.toList());
     }
 }

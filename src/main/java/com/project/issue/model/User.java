@@ -1,7 +1,6 @@
 package com.project.issue.model;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -11,16 +10,16 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String username;
     private String name;
-
+    private String password;
     private String email;
-
     private String role;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "user_id")
-    private List<LoginHistory> loginHistory = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<LoginHistory> loginHistories;
 
+    // Getter and Setter methods
     public Long getId() {
         return id;
     }
@@ -29,12 +28,28 @@ public class User {
         this.id = id;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getEmail() {
@@ -53,5 +68,11 @@ public class User {
         this.role = role;
     }
 
-    // Getters and Setters
+    public List<LoginHistory> getLoginHistories() {
+        return loginHistories;
+    }
+
+    public void setLoginHistories(List<LoginHistory> loginHistories) {
+        this.loginHistories = loginHistories;
+    }
 }

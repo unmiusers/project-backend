@@ -10,12 +10,14 @@ public class LoginHistory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
     private LocalDateTime date;
     private String ip;
 
-    // Getters and Setters
-
+    // Getter and Setter methods
     public Long getId() {
         return id;
     }
@@ -24,12 +26,12 @@ public class LoginHistory {
         this.id = id;
     }
 
-    public Long getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public LocalDateTime getDate() {
