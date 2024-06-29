@@ -8,6 +8,7 @@ import com.project.issue.util.ResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -33,6 +34,9 @@ public class UserController {
 
     @Autowired
     private ResponseUtil responseUtil;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
@@ -93,12 +97,12 @@ public class UserController {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        User user = userService.findByUsername(loginRequest.getUsername());
-        if (user == null || !userService.checkPassword(user, loginRequest.getPassword())) {
+        Optional<User> optionalUser = userService.findByUsername(loginRequest.getUsername());
+        if (optionalUser.isEmpty() || !userService.checkPassword(optionalUser.get(), loginRequest.getPassword())) {
             return ResponseEntity.status(401).body("Invalid username or password");
         }
 
-        String token = jwtUtil.generateToken(user.getUsername());
+        String token = jwtUtil.generateToken(optionalUser.get().getUsername());
 
         return ResponseEntity.ok(token);
     }
